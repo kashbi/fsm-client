@@ -1,6 +1,8 @@
 # ReactJS Quick using FSM library
 
-Demos the usage of FSM-library in reactJS app to manage the state.
+Demos the usage of FSM-library(https://github.com/kashbi/fsm-ts-library) in reactJS app to manage the state.
+The idea is to demo a simple Quiz flow, while managing the state via FSM library.
+In ReactJS context, a custome hook (useQuizFSM) was implemented to handle all state and rendering aspect.
 
 Instructions:
  
