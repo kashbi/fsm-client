@@ -1,0 +1,23 @@
+[
+  [
+    "constructor",
+    "componentDidMount",
+    "componentWillUnmount",
+    "shouldComponentUpdate"
+  ],
+  [
+    "this.setState({monkey: 'Capuchin'})",
+    "this.state.monkey = 'Capuchin'",
+    "this.updateState({monkey: 'Capuchin'})",
+    "this.setState('monkey', 'Capuchin')"
+  ],
+  [
+    "a form of HTML",
+    "a template language",
+    "a syntax extension to JavaScript"
+  ],
+  [
+    "this.setState({\\ncounter: this.state.counter + this.props.increment\\n});",
+    "this.setState((prevState, props) => ({\\ncounter: prevState.counter + props.increment\\n}))"
+  ]
+]

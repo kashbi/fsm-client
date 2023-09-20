@@ -1,0 +1,6 @@
+[
+  "componentDidMount is recommended by React for side-effects",
+  "this.state is initialized in the constructor, afterwards it should never be mutated directly, as subsequent calls of setState() may replace the mutation you made. Treat this.state as if it were immutable.",
+  "JSX is a syntax extension to JavaScript used to describe what the UI should look like. JSX may remind you of a template language, but it comes with the full power of JavaScript.",
+  "Because this.state may be updated asynchronously, you should not rely on its values for calculating the next state. Instead you should use the functional version of setState which provides prevState as one of the arguments."
+]

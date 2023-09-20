@@ -1,9 +1,8 @@
 // src/App.tsx
 import React from 'react';
 import './App.css';
-import Quiz from './components/Quiz';
-import {ThemeProvider, createTheme} from '@mui/material/styles';
-import FSM from './components/FSM';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import QuizLayout from './components/QuizLayout';
 
 const theme = createTheme();
 
@@ -11,7 +10,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <div className="App">
-                <Quiz/>
+                <QuizLayout/>
             </div>
         </ThemeProvider>
     );

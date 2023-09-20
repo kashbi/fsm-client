@@ -6,6 +6,15 @@ export const QuizContainer = styled.div`
   background-color: #f0f0f0;
 `;
 
+export const QuizMessage = styled.div`
+  text-align: center;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid gray;
+  border-radius: 2px;
+  margin-top: 5px;
+`;
+
 // Define a styled component for the quiz title
 export const QuizTitle = styled.h1`
   color: #333;
@@ -26,6 +35,10 @@ export const QuizButton = styled.button`
   &.disabled {
     cursor: not-allowed;
     disabled;
+  }
+  
+  &.next{
+    margin-top: 107px;
   }
 `;
 

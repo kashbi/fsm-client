@@ -1,57 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import {FSM} from 'fsm-library';
-import {QuizContainer, QuizTitle, QuizButton} from '../styles/styles';
+import React, {useState} from 'react';
+import {QuizButton, QuizContainer, QuizMessage, QuizTitle} from '../styles/styles';
+import {State} from '../hooks/useQuizFSM';
 
-enum State {
-    start = 'start',
-    question1 = 'question1',
-    question2 = 'question2',
-    question3 = 'question3',
-    finish = 'finish',
-}
-
-const fsm = new FSM();
-
-// Define quiz states
-const startState = fsm.addState(State.start);
-const question1State = fsm.addState(State.question1);
-const question2State = fsm.addState(State.question2);
-const question3State = fsm.addState(State.question3);
-const finishState = fsm.addState(State.finish);
-
-// Define transitions
-fsm.addTransition(State.start, 'startQuiz', State.question1);
-fsm.addTransition(State.question1, 'answer1', State.question2);
-fsm.addTransition(State.question1, 'wrong', State.question2);
-fsm.addTransition(State.question2, 'answer2', State.question3);
-fsm.addTransition(State.question3, 'answer3', State.finish);
-// Set the initial state
-fsm.setInitialState(State.start);
-
-const FSM_SERER_QUESTION_API_URL = 'http://localhost:4000/api/questions';
-const Quiz = () => {
+const Quiz = ({currentState, transitionTo, questionsData} ) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState([]);
-    const [currentState, setCurrentState] = useState(fsm.currentState.name);
-    const [questionsData, setQuestionsData] = useState(null);
     const [isCorrect, setIsCorrect] = useState(null);
     const [selectedAnswerIndices, setSelectedAnswerIndices] = useState([]);
     const [showNextButton, setShowNextButton] = useState(null);
 
-    // Define an effect to fetch the JSON data after rendering
-    useEffect(() => {
-        fetch(FSM_SERER_QUESTION_API_URL)
-            .then((response) => response.json())
-            .then((data) => setQuestionsData(data))
-            .catch((error) => {
-                console.error('Error fetching JSON data:', error);
-            });
-    }, []);
-
     const startQuiz = () => {
-        if (fsm.currentState?.name === 'start') {
-            fsm.transition('startQuiz'); // This triggers the transition
-            setCurrentState(fsm.currentState.name);
+        if (currentState === State.start) {
+            transitionTo('startQuiz'); // This triggers the transition
         }
     };
     // Function to handle answering a question
@@ -67,16 +27,16 @@ const Quiz = () => {
                 if (!selectedAnswerIndices.length) {
                     setShowNextButton(false);
                     setSelectedAnswerIndices([]);
-                    if (nextQuestionIndex < questionsData.questions.length) {
-                        fsm.transition(`answer${nextQuestionIndex}`);
-                        setUserAnswers([...userAnswers, selectedAnswer]);
-                        setCurrentQuestionIndex(nextQuestionIndex);
-                        setCurrentState(fsm.currentState.name);
-                    } else {
-                        fsm.transition(`answer${nextQuestionIndex}`);
-                        setUserAnswers([...userAnswers, selectedAnswer]);
-                        setCurrentState(fsm.currentState.name);
-                    }
+                    setTimeout(() => {
+                        if (nextQuestionIndex < questionsData.questions.length) {
+                            transitionTo(`answer${nextQuestionIndex}`);
+                            setUserAnswers([...userAnswers, selectedAnswer]);
+                            setCurrentQuestionIndex(nextQuestionIndex);
+                        } else {
+                            transitionTo(`answer${nextQuestionIndex}`);
+                            setUserAnswers([...userAnswers, selectedAnswer]);
+                        }
+                    }, 2000);
                 }else{
                     setShowNextButton(true);
                 }
@@ -87,8 +47,8 @@ const Quiz = () => {
     return (
 
         <QuizContainer>
-            <QuizTitle>Quiz</QuizTitle>
-
+            <QuizTitle>Quiz {questionsData?.questions?.length>0 ? '':' [Loading...]'}</QuizTitle>
+            <div>currentState: {currentState}</div>
             {currentState === 'start' && (
                 <QuizButton className={questionsData?.questions?.length ? '' : 'disabled'} onClick={startQuiz}>Start Quiz</QuizButton>
             )}
@@ -96,7 +56,7 @@ const Quiz = () => {
                 <div>
                     <p>{questionsData.questions[currentQuestionIndex]}</p>
 
-                    {questionsData.answers[currentQuestionIndex].map((answer, index) => (
+                    {questionsData.answersOptions[currentQuestionIndex].map((answer, index) => (
                         <div key={index}>
                             <QuizButton className={isCorrect === false && selectedAnswerIndices?.includes(index) ? 'error' : ''} onClick={() => answerQuestion(answer, index)}>{answer}</QuizButton>
                         </div>
@@ -105,16 +65,17 @@ const Quiz = () => {
                 </div>
             )}
 
-            {isCorrect === true && selectedAnswerIndices.length> 0 && (<div>Nice! {questionsData.correctAnswers[currentQuestionIndex]}</div>)}
-            {isCorrect === false && (<div>Very nice answer...but for totaly other question....</div>)}
-            {showNextButton && (<QuizButton onClick={()=> {
-                fsm.transition(`answer${currentQuestionIndex+1}`);
-                setCurrentState(fsm.currentState.name);
+            {isCorrect === true && selectedAnswerIndices.length === 0 && (<QuizMessage>Nice! {questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
+            {isCorrect === true && selectedAnswerIndices.length > 0 && (<QuizMessage>That's better, as your know...{questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
+            {isCorrect === false && (<QuizMessage>Very nice answer...but for totaly other question....</QuizMessage>)}
+            
+            {showNextButton && (<QuizButton className="next" onClick={()=> {
+                transitionTo(`answer${currentQuestionIndex+1}`);
                 setCurrentQuestionIndex(currentQuestionIndex+1);
                 setShowNextButton(false);
                 setIsCorrect(null);
                 setSelectedAnswerIndices([]);
-            }}>Next</QuizButton>)}
+            }}>Next question</QuizButton>)}
 
             {currentState === 'finish' && (
                 <div>
