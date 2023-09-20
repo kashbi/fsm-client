@@ -26,6 +26,7 @@ const initQuizStates = ()=>{
     fsm.addTransition(State.question1, 'wrong', State.question2);
     fsm.addTransition(State.question2, 'answer2', State.question3);
     fsm.addTransition(State.question3, 'answer3', State.finish);
+    fsm.addTransition(State.finish, 'next', State.start);
 // Set the initial state
     fsm.setInitialState(State.start);
 }

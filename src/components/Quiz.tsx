@@ -6,7 +6,7 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 const Quiz = ({currentState, transitionTo, questionsData} ) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [userAnswers, setUserAnswers] = useState([]);
+    const [correctAnswers, setCorrectAnswers] = useState([]);
     const [isCorrect, setIsCorrect] = useState(null);
     const [selectedAnswerIndices, setSelectedAnswerIndices] = useState([]);
     const [showNextButton, setShowNextButton] = useState(null);
@@ -33,11 +33,12 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                         setIsCorrect(null);
                         if (nextQuestionIndex < questionsData.questions.length) {
                             transitionTo(`answer${nextQuestionIndex}`);
-                            setUserAnswers([...userAnswers, selectedAnswer]);
+                            setCorrectAnswers([...correctAnswers, selectedAnswer]);
                             setCurrentQuestionIndex(nextQuestionIndex);
                         } else {
                             transitionTo(`answer${nextQuestionIndex}`);
-                            setUserAnswers([...userAnswers, selectedAnswer]);
+                            setCorrectAnswers([...correctAnswers, selectedAnswer]);
+
                         }
                     }, 2000);
                 }else{
@@ -96,18 +97,21 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
             {currentState === 'finish' && (
                 <div>
                     <p>Quiz completed!</p>
-                    <p>Correct answers:</p>
-                    <ul>
+                    <p>Summary</p>
                         {questionsData.correctAnswers.map((answer, index) => (
-                            <li key={index}>{answer}</li>
+                            <QuizMessage key={index}>{answer}</QuizMessage>
                         ))}
-                    </ul>
-                    <p>Your answers:</p>
-                    <ul>
-                        {userAnswers.map((answer, index) => (
-                            <li key={index}>{answer}</li>
-                        ))}
-                    </ul>
+                    <QuizTitle>Your score: { Math.round(correctAnswers.length / questionsData.questions.length * 100) } % </QuizTitle>
+
+                    <QuizButton onClick={()=>{
+                        setCurrentQuestionIndex(0);
+                        transitionTo('next');
+                        setShowNextButton(false);
+                        setIsCorrect(null);
+                        setCorrectAnswers([]);
+                        setSelectedAnswerIndices([]);}}>
+                        So FUN, let's do it all over again
+                    </QuizButton>
                 </div>
             )}
             </>

@@ -15,9 +15,5 @@
     "a form of HTML",
     "a template language",
     "a syntax extension to JavaScript"
-  ],
-  [
-    "this.setState({\\ncounter: this.state.counter + this.props.increment\\n});",
-    "this.setState((prevState, props) => ({\\ncounter: prevState.counter + props.increment\\n}))"
   ]
 ]
