@@ -13,6 +13,12 @@ app.use(cors());
 // Enable JSON request parsing middleware
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname,'..', 'build')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..','build', 'index.html'));
+});
+
 // Function to read JSON data from a file
 function readJsonFile(filePath) {
     try {

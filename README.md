@@ -1,12 +1,13 @@
-# Getting Started with Create React App
+# ReactJS Quick using FSM library
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Demos the usage of FSM-library in reactJS app to manage the state.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `start:client`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -14,10 +15,18 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
+### `start:serve`
+
+Will build the ReactJS app, and starts the server, you can access it via http://localhost:4000
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm start:server`
+
+Runs the server at port :4000
 
 ### `npm run build`
 

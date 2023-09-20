@@ -10,7 +10,7 @@ export enum State {
     question3 = 'question3',
     finish = 'finish',
 }
-const FSM_SERER_QUESTION_API_URL = 'http://localhost:4000/api/questions';
+const FSM_SERER_QUESTION_API_URL = '/api/questions';
 const initQuizStates = ()=>{
     console.log('*** Initializing State ***');
     // Define quiz states
