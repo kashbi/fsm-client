@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const port = 4000;
+// Define a route to get JSON data
+const DELAY_TIME = 2000;
 
 // Enable CORS (Cross-Origin Resource Sharing) middleware
 app.use(cors());
@@ -23,7 +25,7 @@ function readJsonFile(filePath) {
     }
 }
 
-// Define a route to get JSON data
+
 app.get('/api/questions', (req, res) => {
     // Read data from JSON files
     const questions = readJsonFile('questions.json');
@@ -33,12 +35,14 @@ app.get('/api/questions', (req, res) => {
 
     if (questions && answersOptions && correctAnswers && correctAnswersIndex) {
         // Send the JSON data as a response
-        res.json({
-            questions,
-            answersOptions,
-            correctAnswers,
-            correctAnswersIndex,
-        });
+       setTimeout(()=>{
+           res.json({
+               questions,
+               answersOptions,
+               correctAnswers,
+               correctAnswersIndex,
+           });
+       }, DELAY_TIME)
     } else {
         // Handle errors and return a 500 status code with an error message
         res.status(500).json({ error: 'Failed to read JSON data from files' });

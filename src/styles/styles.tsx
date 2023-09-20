@@ -32,6 +32,9 @@ export const QuizButton = styled.button`
   &.error {
     background-color: red;
   }
+  &.correct {
+    background-color: green;
+  }
   &.disabled {
     cursor: not-allowed;
     disabled;

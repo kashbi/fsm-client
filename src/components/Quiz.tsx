@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
 import {QuizButton, QuizContainer, QuizMessage, QuizTitle} from '../styles/styles';
 import {State} from '../hooks/useQuizFSM';
-
+import { Bars } from 'react-loader-spinner';
+import Container from '@mui/material/Container/Container';
+import Box from '@mui/material/Box/Box';
+import Zoom from '@mui/material/Zoom/Zoom';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 const Quiz = ({currentState, transitionTo, questionsData} ) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState([]);
@@ -28,6 +33,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                     setShowNextButton(false);
                     setSelectedAnswerIndices([]);
                     setTimeout(() => {
+                        setIsCorrect(null);
                         if (nextQuestionIndex < questionsData.questions.length) {
                             transitionTo(`answer${nextQuestionIndex}`);
                             setUserAnswers([...userAnswers, selectedAnswer]);
@@ -46,29 +52,44 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
 
     return (
 
-        <QuizContainer>
-            <QuizTitle>Quiz {questionsData?.questions?.length>0 ? '':' [Loading...]'}</QuizTitle>
-            <div>currentState: {currentState}</div>
+        <Container maxWidth="sm">
+            <QuizTitle>ReactJS Quiz</QuizTitle>
+            {
+                (!!!questionsData)  && <Bars
+                    height="80"
+                    width="80"
+                    color="#0074d9"
+                    ariaLabel="bars-loading"
+                    wrapperStyle={{display: 'flex','justify-content': 'center'}}
+                    wrapperClass=""
+                    visible={true}
+                />
+            }
+
             {currentState === 'start' && (
-                <QuizButton className={questionsData?.questions?.length ? '' : 'disabled'} onClick={startQuiz}>Start Quiz</QuizButton>
+                <QuizButton className={questionsData?.questions?.length ? '' : 'disabled'} onClick={startQuiz}>{!!!questionsData? 'Loading':'Start Quiz'}</QuizButton>
             )}
             {currentState?.startsWith('question') && (
-                <div>
-                    <p>{questionsData.questions[currentQuestionIndex]}</p>
+                <Box>
+                    <Zoom in={true} style={{ transitionDelay:  '500ms'}}>
+                        <div>
+                            <p>{questionsData.questions[currentQuestionIndex]}</p>
 
-                    {questionsData.answersOptions[currentQuestionIndex].map((answer, index) => (
-                        <div key={index}>
-                            <QuizButton className={isCorrect === false && selectedAnswerIndices?.includes(index) ? 'error' : ''} onClick={() => answerQuestion(answer, index)}>{answer}</QuizButton>
+                            {questionsData.answersOptions[currentQuestionIndex].map((answer, index) => (
+                                <div key={index}>
+                                    <QuizButton className={isCorrect === false && selectedAnswerIndices?.includes(index) ? 'error' : ''} onClick={() => answerQuestion(answer, index)}>{answer}</QuizButton>
+                                </div>
+                            ))}
+
                         </div>
-                    ))}
-
-                </div>
+                    </Zoom>
+                </Box>
             )}
 
-            {isCorrect === true && selectedAnswerIndices.length === 0 && (<QuizMessage>Nice! {questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
+            {isCorrect === true && selectedAnswerIndices.length === 0 && (<QuizMessage><div><DoneOutlineIcon></DoneOutlineIcon></div> Nice! {questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
             {isCorrect === true && selectedAnswerIndices.length > 0 && (<QuizMessage>That's better, as your know...{questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
-            {isCorrect === false && (<QuizMessage>Very nice answer...but for totaly other question....</QuizMessage>)}
-            
+            {isCorrect === false && (<QuizMessage><div><SentimentVeryDissatisfiedIcon></SentimentVeryDissatisfiedIcon></div>nice answer...but for totaly other question....</QuizMessage>)}
+
             {showNextButton && (<QuizButton className="next" onClick={()=> {
                 transitionTo(`answer${currentQuestionIndex+1}`);
                 setCurrentQuestionIndex(currentQuestionIndex+1);
@@ -94,7 +115,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                     </ul>
                 </div>
             )}
-        </QuizContainer>
+            </Container>
     );
 };
 

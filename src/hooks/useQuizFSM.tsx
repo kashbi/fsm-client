@@ -56,7 +56,7 @@ export function useQuizFSM() {
             fsm.transition(event);
             setCurrentState(fsm.currentState?.name as State);
         },
-        []
+        [currentState]
     );
 
     return {
