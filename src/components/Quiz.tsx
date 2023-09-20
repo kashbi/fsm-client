@@ -2,9 +2,6 @@ import React, {useState} from 'react';
 import {QuizButton, QuizContainer, QuizMessage, QuizTitle} from '../styles/styles';
 import {State} from '../hooks/useQuizFSM';
 import { Bars } from 'react-loader-spinner';
-import Container from '@mui/material/Container/Container';
-import Box from '@mui/material/Box/Box';
-import Zoom from '@mui/material/Zoom/Zoom';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 const Quiz = ({currentState, transitionTo, questionsData} ) => {
@@ -52,7 +49,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
 
     return (
 
-        <Container maxWidth="sm">
+        <>
             <QuizTitle>ReactJS Quiz</QuizTitle>
             {
                 (!!!questionsData)  && <Bars
@@ -70,8 +67,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                 <QuizButton className={questionsData?.questions?.length ? '' : 'disabled'} onClick={startQuiz}>{!!!questionsData? 'Loading':'Start Quiz'}</QuizButton>
             )}
             {currentState?.startsWith('question') && (
-                <Box>
-                    <Zoom in={true} style={{ transitionDelay:  '500ms'}}>
+
                         <div>
                             <p>{questionsData.questions[currentQuestionIndex]}</p>
 
@@ -82,8 +78,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                             ))}
 
                         </div>
-                    </Zoom>
-                </Box>
+
             )}
 
             {isCorrect === true && selectedAnswerIndices.length === 0 && (<QuizMessage><div><DoneOutlineIcon></DoneOutlineIcon></div> Nice! {questionsData.correctAnswers[currentQuestionIndex]}</QuizMessage>)}
@@ -115,7 +110,7 @@ const Quiz = ({currentState, transitionTo, questionsData} ) => {
                     </ul>
                 </div>
             )}
-            </Container>
+            </>
     );
 };
 
