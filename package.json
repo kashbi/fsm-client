@@ -52,6 +52,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^29.7.0"
   }
 }
